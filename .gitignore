@@ -12,6 +12,7 @@
 .buildlog/
 .history
 .svn/
+lib/gen/
 
 # IntelliJ related
 *.iml
