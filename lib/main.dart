@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ultra/bonds/di/injectable.dart';
+import 'package:ultra/di/injectable.dart';
 import 'package:ultra/bonds/presentation/screens/bonds_list_screen.dart';
 
 void main() {

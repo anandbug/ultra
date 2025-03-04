@@ -6,7 +6,9 @@ import 'package:ultra/bonds/cubit/bonds_list_cubit.dart';
 import 'package:ultra/bonds/cubit/bonds_list_state.dart';
 import 'package:ultra/bonds/data/models/bond_item_model.dart';
 import 'package:ultra/bonds/data/repositories/bonds_repository.dart';
-import 'package:ultra/bonds/di/injectable.dart';
+import 'package:ultra/di/injectable.dart';
+import 'package:ultra/bonds/presentation/transitions/size_fase_transition.dart';
+import 'package:ultra/bonds/presentation/widgets/auto_animates_list.dart';
 import 'package:ultra/gen/assets.gen.dart';
 import 'package:ultra/utils/app_colors.dart';
 import 'package:ultra/utils/app_text_styles.dart';
@@ -60,17 +62,30 @@ class BondsListContent extends StatelessWidget {
                 ),
                 SearchBox(),
                 24.sh,
-                Padding(
-                  padding: EdgeInsets.only(left: 20),
-                  child: Text(
-                    "suggested results".toUpperCase(),
-                    style: AppTextStyles.sectionHeader.copyWith(
-                      color: AppColors.textGrey,
+                if (state.filteredItems.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      "suggested results".toUpperCase(),
+                      style: AppTextStyles.sectionHeader.copyWith(
+                        color: AppColors.textGrey,
+                      ),
                     ),
                   ),
-                ),
-                8.sh,
-                Expanded(child: BondsList(state.items)),
+                  8.sh,
+                  Flexible(child: BondsList(state.filteredItems)),
+                ],
+                if (state.filteredItems.isEmpty)
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "No results found",
+                        style: AppTextStyles.header.copyWith(
+                          color: AppColors.textGrey,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             );
           case Error():
@@ -81,8 +96,21 @@ class BondsListContent extends StatelessWidget {
   }
 }
 
-class SearchBox extends StatelessWidget {
+class SearchBox extends StatefulWidget {
   const SearchBox({super.key});
+
+  @override
+  State<SearchBox> createState() => _SearchBoxState();
+}
+
+class _SearchBoxState extends State<SearchBox> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,12 +128,21 @@ class SearchBox extends StatelessWidget {
           Assets.icons.icGlass.svg(width: 14, height: 14),
           12.sw,
           Expanded(
-            child: Text(
-              "Search by Issuer Name or ISIN",
-              style: AppTextStyles.textField.copyWith(
-                color: AppColors.textGrey,
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.zero,
+                hintText: 'Search by Issuer Name or ISIN',
+                hintStyle: AppTextStyles.textField.copyWith(
+                  color: AppColors.textGrey,
+                ),
+                border: InputBorder.none,
+                hintMaxLines: 1,
               ),
               maxLines: 1,
+              onChanged: (query) {
+                context.read<BondsListCubit>().searchBonds(query);
+              },
             ),
           ),
           12.sw,
@@ -129,10 +166,15 @@ class BondsList extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: ListView.builder(
+      child: AutoAnimatedList<BondItem>(
+        shrinkWrap: true,
         padding: EdgeInsets.zero,
-        itemCount: items.length,
-        itemBuilder: (context, index) => BondItemContent(item: items[index]),
+        itemBuilder:
+            (context, bond, index, animation) => SizeFadeTransition(
+              animation: animation,
+              child: BondItemContent(item: items[index]),
+            ),
+        items: items,
       ),
     );
   }

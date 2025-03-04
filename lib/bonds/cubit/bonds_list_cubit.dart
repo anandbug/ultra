@@ -14,7 +14,13 @@ class BondsListCubit extends Cubit<BondsListState> {
       final result = await _repository.getMarketItems();
       switch (result) {
         case NetworkSuccess():
-          emit(BondsListState.loaded(result.data));
+          emit(
+            BondsListState.loaded(
+              items: result.data,
+              searchQuery: '',
+              filteredItems: result.data,
+            ),
+          );
           break;
         case NetworkError():
           emit(BondsListState.error(result.body.message));
@@ -23,5 +29,25 @@ class BondsListCubit extends Cubit<BondsListState> {
     } catch (e) {
       emit(BondsListState.error(kDefaultErrorMsg));
     }
+  }
+
+  void searchBonds(String query) {
+    if (state is! Loaded) return;
+
+    final currentState = state as Loaded;
+    final filteredItems =
+        currentState.items.where((item) {
+          final lowerQuery = query.toLowerCase();
+          return item.isin.toLowerCase().contains(lowerQuery) ||
+              item.name.toLowerCase().contains(lowerQuery);
+        }).toList();
+
+    emit(
+      BondsListState.loaded(
+        items: currentState.items,
+        searchQuery: query,
+        filteredItems: filteredItems,
+      ),
+    );
   }
 }

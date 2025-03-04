@@ -104,6 +104,7 @@ void main() {
   group('BondsListCubit', () {
     final bondItems = [
       BondItem(name: 'Bond 1', isin: 'ISIN1', logo: 'logo1', rating: 'A'),
+      BondItem(name: 'Bond 2', isin: 'ISIN2', logo: 'logo2', rating: 'B'),
     ];
 
     blocTest<BondsListCubit, BondsListState>(
@@ -118,7 +119,11 @@ void main() {
       expect:
           () => [
             const BondsListState.loading(),
-            BondsListState.loaded(bondItems),
+            BondsListState.loaded(
+              items: bondItems,
+              searchQuery: "",
+              filteredItems: bondItems,
+            ),
           ],
     );
 
@@ -168,6 +173,72 @@ void main() {
           () => [
             const BondsListState.loading(),
             const BondsListState.error(kDefaultErrorMsg),
+          ],
+    );
+
+    blocTest<BondsListCubit, BondsListState>(
+      'emits [loaded] with filtered items when searchBonds is called with name search',
+      build: () {
+        return cubit;
+      },
+      seed:
+          () => BondsListState.loaded(
+            items: bondItems,
+            searchQuery: '',
+            filteredItems: bondItems,
+          ),
+      act: (cubit) => cubit.searchBonds('Bond 1'),
+      expect:
+          () => [
+            BondsListState.loaded(
+              items: bondItems,
+              searchQuery: 'Bond 1',
+              filteredItems: [bondItems[0]],
+            ),
+          ],
+    );
+
+    blocTest<BondsListCubit, BondsListState>(
+      'emits [loaded] with filtered items when searchBonds is called with isn search',
+      build: () {
+        return cubit;
+      },
+      seed:
+          () => BondsListState.loaded(
+            items: bondItems,
+            searchQuery: '',
+            filteredItems: bondItems,
+          ),
+      act: (cubit) => cubit.searchBonds('ISIN1'),
+      expect:
+          () => [
+            BondsListState.loaded(
+              items: bondItems,
+              searchQuery: 'ISIN1',
+              filteredItems: [bondItems[0]],
+            ),
+          ],
+    );
+
+    blocTest<BondsListCubit, BondsListState>(
+      'emits [loaded] with empty filtered items when searchBonds does not match any item',
+      build: () {
+        return cubit;
+      },
+      seed:
+          () => BondsListState.loaded(
+            items: bondItems,
+            searchQuery: '',
+            filteredItems: bondItems,
+          ),
+      act: (cubit) => cubit.searchBonds('Nonexistent Bond'),
+      expect:
+          () => [
+            BondsListState.loaded(
+              items: bondItems,
+              searchQuery: 'Nonexistent Bond',
+              filteredItems: [],
+            ),
           ],
     );
   });

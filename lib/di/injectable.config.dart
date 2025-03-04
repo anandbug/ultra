@@ -12,7 +12,7 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:ultra/bonds/data/repositories/bonds_repository.dart' as _i1052;
-import 'package:ultra/bonds/di/injectable.dart' as _i757;
+import 'package:ultra/di/injectable.dart' as _i757;
 import 'package:ultra/network/dio_client.dart' as _i252;
 
 extension GetItInjectableX on _i174.GetIt {
