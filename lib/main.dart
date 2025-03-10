@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ultra/di/injectable.dart';
-import 'package:ultra/bonds/presentation/screens/bonds_list_screen.dart';
+import 'package:ultra/router/app_router.dart';
 
 void main() {
   configureDependencies();
@@ -16,6 +16,14 @@ class UltraApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) =>
-      MaterialApp(home: const BondsListScreen());
+  Widget build(BuildContext context) => MaterialApp.router(
+    routeInformationProvider: AppRouter.router.routeInformationProvider,
+    routeInformationParser: AppRouter.router.routeInformationParser,
+    routerDelegate: AppRouter.router.routerDelegate,
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(
+      primarySwatch: Colors.blue,
+      scaffoldBackgroundColor: Colors.black,
+    ),
+  );
 }
