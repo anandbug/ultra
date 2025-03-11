@@ -3,55 +3,49 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:ultra/bonds/data/models/company_financial.dart';
+import 'package:ultra/bonds/data/models/financial_data.dart';
+import 'package:ultra/bonds/data/models/financials.dart';
 import 'package:ultra/utils/app_colors.dart';
 import 'package:ultra/utils/app_text_styles.dart';
 import 'dart:ui' as ui;
 
 class BarChart extends StatelessWidget {
   final bool isRevenue;
-  final List<CompanyFinancials> companyFinancials;
+  final Financials companyFinancials;
   const BarChart({
     super.key,
     this.isRevenue = false,
-    this.companyFinancials = const [],
+    required this.companyFinancials,
   });
+
+  List<CompanyFinancials> getCompanyFinancials() {
+    final financialData = <CompanyFinancials>[];
+    for (FinancialData editda in companyFinancials.ebitda) {
+      final revenue = companyFinancials.revenue.firstWhere(
+        (element) => element.month == editda.month,
+      );
+      financialData.add(
+        CompanyFinancials(
+          month: editda.month,
+          ebitda: editda.value,
+          revenue: revenue.value,
+        ),
+      );
+    }
+    return financialData;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final financialData = [
-      CompanyFinancials(month: 'Jan', ebitda: 12000000, revenue: 25000000),
-      CompanyFinancials(month: 'Feb', ebitda: 13500000, revenue: 26500000),
-      CompanyFinancials(month: 'Mar', ebitda: 11800000, revenue: 24500000),
-      CompanyFinancials(month: 'Apr', ebitda: 14500000, revenue: 27800000),
-      CompanyFinancials(month: 'May', ebitda: 12800000, revenue: 26000000),
-      CompanyFinancials(month: 'Jun', ebitda: 15500000, revenue: 29000000),
-      CompanyFinancials(month: 'Jul', ebitda: 13200000, revenue: 27500000),
-      CompanyFinancials(month: 'Aug', ebitda: 14800000, revenue: 28500000),
-      CompanyFinancials(month: 'Sep', ebitda: 13700000, revenue: 27000000),
-      CompanyFinancials(month: 'Oct', ebitda: 16000000, revenue: 30000000),
-      CompanyFinancials(month: 'Nov', ebitda: 12500000, revenue: 25500000),
-      CompanyFinancials(month: 'Dec', ebitda: 14000000, revenue: 29500000),
-    ];
-    // Define max value for scaling
-    double maxValue = financialData
+    final financialData = getCompanyFinancials();
+    int maxValue = financialData
         .map((f) => [f.ebitda, f.revenue].reduce((a, b) => a > b ? a : b))
         .reduce((a, b) => a > b ? a : b);
+    int decimalPlace = (log(maxValue) / ln10).round();
+    final double valueWithoutDecimal = maxValue / pow(10, decimalPlace - 1);
+    maxValue = (valueWithoutDecimal.ceil()) * pow(10, decimalPlace - 1).toInt();
 
-    print("max value is $maxValue");
-    double maxy = maxValue;
-    double max = 0;
-    while (maxy > 1) {
-      maxy = maxy / 10;
-      max++;
-    }
-    final double maxVal = maxValue / pow(10, max - 1);
-    maxValue = (maxVal.ceil()) * pow(10, max - 1).toDouble();
-
-    print("max value is $maxValue");
-
-    final yLabels = getYLables(maxValue, max);
-
-    print("list is $yLabels");
+    final yLabels = getYLables(maxValue, decimalPlace);
 
     return AspectRatio(
       aspectRatio: 2,
@@ -64,7 +58,7 @@ class BarChart extends StatelessWidget {
 
 class _BarChartPainter extends CustomPainter {
   final List<CompanyFinancials> financials;
-  final double maxValue;
+  final int maxValue;
   final List<String> yLabels;
   final bool isRevenue;
 
@@ -197,13 +191,13 @@ class _BarChartPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-List<String> getYLables(double maxValue, double max) {
+List<String> getYLables(int maxValue, int maxDecimalPlace) {
   List<String> yLabels = [];
-  double graphMaxHeight = maxValue / pow(10, max - 1);
+  double graphMaxHeight = maxValue / pow(10, maxDecimalPlace);
   double startValue = 0.0;
   while (graphMaxHeight - 0.5 >= 0) {
     graphMaxHeight = graphMaxHeight - 0.5;
-    startValue = startValue + 0.5 * pow(10, max - 1);
+    startValue = startValue + 0.5 * pow(10, maxDecimalPlace - 1);
     final value = NumberFormat.compactCurrency(
       locale: 'en_IN',
       symbol: "₹",

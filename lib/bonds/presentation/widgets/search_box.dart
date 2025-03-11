@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ultra/bonds/cubit/bonds_list_cubit.dart';
+import 'package:ultra/bonds/presentation/cubit/bonds_list_cubit.dart';
 import 'package:ultra/gen/assets.gen.dart';
 import 'package:ultra/utils/app_colors.dart';
 import 'package:ultra/utils/app_text_styles.dart';

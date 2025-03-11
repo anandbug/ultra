@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ultra/bonds/cubit/bond_details_cubit.dart';
-import 'package:ultra/bonds/cubit/bond_details_state.dart';
+import 'package:ultra/bonds/presentation/cubit/bond_details_cubit.dart';
+import 'package:ultra/bonds/presentation/cubit/bond_details_state.dart';
 import 'package:ultra/bonds/data/models/financial_data.dart';
 import 'package:ultra/bonds/data/models/financials.dart';
 import 'package:ultra/bonds/data/models/issuer_details.dart';
@@ -34,7 +34,6 @@ void main() {
       financials: Financials(
         ebitda: [FinancialData(month: "Jan", value: 100)],
         revenue: [FinancialData(month: "Jan", value: 200)],
-        netIncome: 300,
       ),
     );
 

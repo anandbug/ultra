@@ -8,7 +8,7 @@ sealed class BondsListState with _$BondsListState {
   const factory BondsListState.loading() = Loading;
   const factory BondsListState.loaded({
     required List<BondItem> items,
-    required String searchQuery,
+    required List<String> searchQueryList,
     required List<BondItem> filteredItems,
   }) = Loaded;
   const factory BondsListState.error(String message) = Error;

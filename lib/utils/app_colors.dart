@@ -23,6 +23,7 @@ class AppColors {
 
   // other colors
   static const blue = Color(0xFF2563EB);
+  static const searchMatch = Color(0x29D97706);
   static const green = Color(0xFF059669);
   static const prosGreen = Color(0xFF15803D);
   static const consRed = Color(0xFFB45309);

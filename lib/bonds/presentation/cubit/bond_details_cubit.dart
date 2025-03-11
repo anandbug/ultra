@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ultra/bonds/cubit/bond_details_state.dart';
+import 'package:ultra/bonds/presentation/cubit/bond_details_state.dart';
 import 'package:ultra/bonds/data/repositories/bonds_repository.dart';
 import 'package:ultra/network/network_result.dart';
 
@@ -24,4 +24,7 @@ class BondDetailsCubit extends Cubit<BondsDetailsState> {
       emit(BondsDetailsState.error(kDefaultErrorMsg));
     }
   }
+
+  @override
+  Future<void> close() => super.close();
 }

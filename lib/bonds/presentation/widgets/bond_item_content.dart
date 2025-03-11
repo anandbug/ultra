@@ -11,13 +11,209 @@ import 'package:ultra/utils/num_extensions.dart';
 
 class BondItemContent extends StatelessWidget {
   final BondItem item;
-  const BondItemContent({super.key, required this.item});
+  final List<String> search;
+  const BondItemContent({super.key, required this.item, required this.search});
 
   @override
   Widget build(BuildContext context) {
+    final isINSmallSpans = <TextSpan>[];
     final titleSmall =
         item.isin.substring(0, item.isin.length - 4).toUpperCase();
     final titleBig = item.isin.substring(item.isin.length - 4).toUpperCase();
+    // final bgPaint =
+    //     Paint()
+    //       ..shader = LinearGradient(
+    //         colors: [AppColors.searchMatch, AppColors.searchMatch],
+    //         begin: Alignment.topLeft,
+    //         end: Alignment.bottomRight,
+    //       ).createShader(Rect.fromLTRB(0, 0, 0, 0));
+
+    //searching in isin small
+    if (search.isNotEmpty) {
+      bool matched = false;
+      for (String word in search) {
+        final wordLowerCase = word.toLowerCase();
+        if (wordLowerCase.isEmpty) continue;
+        final matches =
+            wordLowerCase.allMatches(titleSmall.toLowerCase()).toList();
+        if (matches.isNotEmpty) {
+          matched = true;
+          for (int i = 0; i < matches.length; i++) {
+            final strStart = i == 0 ? 0 : matches[i - 1].end;
+            final match = matches[i];
+            isINSmallSpans.add(
+              TextSpan(
+                text: titleSmall.substring(strStart, match.start).toUpperCase(),
+                style: AppTextStyles.titleSmall.copyWith(
+                  color: AppColors.textGrey,
+                ),
+              ),
+            );
+            isINSmallSpans.add(
+              TextSpan(
+                text:
+                    titleSmall.substring(match.start, match.end).toUpperCase(),
+                style: AppTextStyles.titleSmall.copyWith(
+                  color: AppColors.textGrey,
+                  backgroundColor: AppColors.searchMatch,
+                ),
+              ),
+            );
+          }
+          isINSmallSpans.add(
+            TextSpan(
+              text: titleSmall.substring(matches.last.end).toUpperCase(),
+              style: AppTextStyles.titleSmall.copyWith(
+                color: AppColors.textGrey,
+              ),
+            ),
+          );
+        }
+      }
+      if (!matched) {
+        isINSmallSpans.add(
+          TextSpan(
+            text: titleSmall,
+            style: AppTextStyles.titleSmall.copyWith(color: AppColors.textGrey),
+          ),
+        );
+      }
+    } else {
+      isINSmallSpans.add(
+        TextSpan(
+          text: titleSmall,
+          style: AppTextStyles.titleSmall.copyWith(color: AppColors.textGrey),
+        ),
+      );
+    }
+
+    final isINBigSpans = <TextSpan>[];
+
+    //searching in isin big, i.e. 1234
+    if (search.isNotEmpty) {
+      bool matched = false;
+      for (String word in search) {
+        final wordLowerCase = word.toLowerCase();
+        if (wordLowerCase.isEmpty) continue;
+        final matches =
+            wordLowerCase.allMatches(titleBig.toLowerCase()).toList();
+        if (matches.isNotEmpty) {
+          matched = true;
+          for (int i = 0; i < matches.length; i++) {
+            final strStart = i == 0 ? 0 : matches[i - 1].end;
+            final match = matches[i];
+            isINBigSpans.add(
+              TextSpan(
+                text: titleBig.substring(strStart, match.start).toUpperCase(),
+                style: AppTextStyles.titleBig.copyWith(
+                  color: AppColors.ebitdaBlack,
+                ),
+              ),
+            );
+            isINBigSpans.add(
+              TextSpan(
+                text: titleBig.substring(match.start, match.end).toUpperCase(),
+                style: AppTextStyles.titleBig.copyWith(
+                  color: AppColors.ebitdaBlack,
+                  backgroundColor: AppColors.searchMatch,
+                ),
+              ),
+            );
+          }
+          isINBigSpans.add(
+            TextSpan(
+              text: titleBig.substring(matches.last.end).toUpperCase(),
+              style: AppTextStyles.titleBig.copyWith(
+                color: AppColors.ebitdaBlack,
+              ),
+            ),
+          );
+        }
+      }
+      if (!matched) {
+        isINBigSpans.add(
+          TextSpan(
+            text: titleBig,
+            style: AppTextStyles.titleBig.copyWith(
+              color: AppColors.ebitdaBlack,
+            ),
+          ),
+        );
+      }
+    } else {
+      isINBigSpans.add(
+        TextSpan(
+          text: titleBig,
+          style: AppTextStyles.titleBig.copyWith(color: AppColors.ebitdaBlack),
+        ),
+      );
+    }
+
+    //searching in name
+    final nameSpans = <TextSpan>[];
+    if (search.isNotEmpty) {
+      bool matched = false;
+      // for (String word in search) {
+      final matches = <Match>[];
+      for (String word in search) {
+        final wordLowerCase = word.toLowerCase();
+        if (wordLowerCase.isEmpty) continue;
+        matches.addAll(
+          wordLowerCase.allMatches(item.name.toLowerCase()).toList(),
+        );
+      }
+
+      if (matches.isNotEmpty) {
+        matched = true;
+        for (int i = 0; i < matches.length; i++) {
+          final strStart = i == 0 ? 0 : matches[i - 1].end;
+          final match = matches[i];
+          // if (match.start > strStart) {
+          //   continue;
+          // }
+          if (match.start > strStart) {
+            nameSpans.add(
+              TextSpan(
+                text: item.name.substring(strStart, match.start),
+                style: AppTextStyles.body.copyWith(color: AppColors.textGrey),
+              ),
+            );
+          }
+          nameSpans.add(
+            TextSpan(
+              text: item.name.substring(match.start, match.end),
+              style: AppTextStyles.body.copyWith(
+                color: AppColors.textGrey,
+                backgroundColor: AppColors.searchMatch,
+              ),
+            ),
+          );
+        }
+        nameSpans.add(
+          TextSpan(
+            text: item.name.substring(matches.last.end),
+            style: AppTextStyles.body.copyWith(color: AppColors.textGrey),
+          ),
+        );
+        // }
+      }
+      if (!matched) {
+        nameSpans.add(
+          TextSpan(
+            text: item.name,
+            style: AppTextStyles.body.copyWith(color: AppColors.textGrey),
+          ),
+        );
+      }
+    } else {
+      nameSpans.add(
+        TextSpan(
+          text: item.name,
+          style: AppTextStyles.body.copyWith(color: AppColors.textGrey),
+        ),
+      );
+    }
+
     return InkWell(
       onTap: () {
         context.go("/bond-details");
@@ -40,7 +236,8 @@ class BondItemContent extends StatelessWidget {
                 imageUrl: item.logo,
                 fadeInDuration: 200.milliseconds,
                 fadeOutDuration: 200.milliseconds,
-                placeholder: (context, url) => ImageLoaderWidget(),
+                placeholder:
+                    (context, url) => ImageLoaderWidget(addPadding: false),
                 errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
@@ -49,34 +246,41 @@ class BondItemContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text.rich(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: titleSmall,
-                          style: AppTextStyles.titleSmall.copyWith(
-                            color: AppColors.textGrey,
-                          ),
-                        ),
-                        TextSpan(
-                          text: titleBig,
-                          style: AppTextStyles.titleBig.copyWith(
-                            color: AppColors.black,
-                          ),
-                        ),
-                      ],
-                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text.rich(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        TextSpan(children: isINSmallSpans),
+                      ),
+                      2.sw,
+                      Text.rich(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        TextSpan(children: isINBigSpans),
+                      ),
+                    ],
                   ),
                   2.sh,
-                  Text(
-                    '${item.rating} • ${item.name}',
-                    style: AppTextStyles.body.copyWith(
-                      color: AppColors.textGrey,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${item.rating} •',
+                        style: AppTextStyles.body.copyWith(
+                          color: AppColors.textGrey,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      4.sw,
+                      Text.rich(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        TextSpan(children: nameSpans),
+                      ),
+                    ],
                   ),
                 ],
               ),

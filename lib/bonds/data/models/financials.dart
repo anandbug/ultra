@@ -9,7 +9,6 @@ abstract class Financials with _$Financials {
   const factory Financials({
     required List<FinancialData> ebitda,
     required List<FinancialData> revenue,
-    required int netIncome,
   }) = _Financials;
 
   factory Financials.fromJson(Map<String, dynamic> json) =>

@@ -7,8 +7,8 @@ part 'company_financial.g.dart';
 abstract class CompanyFinancials with _$CompanyFinancials {
   const factory CompanyFinancials({
     required String month,
-    required double ebitda,
-    required double revenue,
+    required int ebitda,
+    required int revenue,
   }) = _CompanyFinancials;
 
   factory CompanyFinancials.fromJson(Map<String, dynamic> json) =>

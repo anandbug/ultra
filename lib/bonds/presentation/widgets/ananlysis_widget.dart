@@ -13,7 +13,7 @@ class AnanlysisWidget extends StatelessWidget {
     return Column(
       children: [
         12.sh,
-        CompanyFinancialsWidget(),
+        CompanyFinancialsWidget(data: data.financials),
         24.sh,
         IssuerDetailsWidget(data: data.issuerDetails),
         40.sh,

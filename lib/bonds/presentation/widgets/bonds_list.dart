@@ -7,8 +7,9 @@ import 'package:ultra/utils/app_colors.dart';
 
 class BondsList extends StatelessWidget {
   final List<BondItem> items;
+  final List<String> searchQuery;
 
-  const BondsList(this.items, {super.key});
+  const BondsList(this.items, this.searchQuery, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class BondsList extends StatelessWidget {
         itemBuilder:
             (context, bond, index, animation) => SizeFadeTransition(
               animation: animation,
-              child: BondItemContent(item: items[index]),
+              child: BondItemContent(item: items[index], search: searchQuery),
             ),
         items: items,
       ),

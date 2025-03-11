@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ultra/bonds/data/models/financials.dart';
 import 'package:ultra/bonds/presentation/widgets/bar_chart.dart';
 import 'package:ultra/utils/app_colors.dart';
 import 'package:ultra/utils/app_text_styles.dart';
@@ -6,7 +7,8 @@ import 'package:ultra/utils/constants.dart';
 import 'package:ultra/utils/num_extensions.dart';
 
 class CompanyFinancialsWidget extends StatefulWidget {
-  const CompanyFinancialsWidget({super.key});
+  final Financials data;
+  const CompanyFinancialsWidget({required this.data, super.key});
 
   @override
   State<CompanyFinancialsWidget> createState() =>
@@ -110,7 +112,10 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget>
           20.sh,
           IndexedStack(
             index: _tabController.index,
-            children: [BarChart(), BarChart(isRevenue: true)],
+            children: [
+              BarChart(companyFinancials: widget.data),
+              BarChart(companyFinancials: widget.data, isRevenue: true),
+            ],
           ),
         ],
       ),

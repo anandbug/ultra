@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:ultra/bonds/cubit/bonds_list_cubit.dart';
-import 'package:ultra/bonds/cubit/bonds_list_state.dart';
+import 'package:ultra/bonds/presentation/cubit/bonds_list_cubit.dart';
+import 'package:ultra/bonds/presentation/cubit/bonds_list_state.dart';
 import 'package:ultra/bonds/data/models/bond_item_model.dart';
 import 'package:ultra/bonds/data/repositories/bonds_repository.dart';
 import 'package:ultra/network/network_result.dart';
@@ -20,8 +20,18 @@ void main() {
 
   group('BondsListCubit', () {
     final bondItems = [
-      BondItem(name: 'Bond 1', isin: 'ISIN1', logo: 'logo1', rating: 'A'),
-      BondItem(name: 'Bond 2', isin: 'ISIN2', logo: 'logo2', rating: 'B'),
+      BondItem(
+        name: 'Hella Chemical Market Private Limited',
+        isin: 'INE06E501754',
+        logo: 'logo1',
+        rating: 'AAA',
+      ),
+      BondItem(
+        name: 'Hella Chemical Market Private Limited',
+        isin: 'INE06E508653',
+        logo: 'logo2',
+        rating: 'AAA',
+      ),
     ];
 
     blocTest<BondsListCubit, BondsListState>(
@@ -38,7 +48,7 @@ void main() {
             const BondsListState.loading(),
             BondsListState.loaded(
               items: bondItems,
-              searchQuery: "",
+              searchQueryList: [],
               filteredItems: bondItems,
             ),
           ],
@@ -101,15 +111,15 @@ void main() {
       seed:
           () => BondsListState.loaded(
             items: bondItems,
-            searchQuery: '',
+            searchQueryList: [],
             filteredItems: bondItems,
           ),
-      act: (cubit) => cubit.searchBonds('Bond 1'),
+      act: (cubit) => cubit.searchBonds('1754'),
       expect:
           () => [
             BondsListState.loaded(
               items: bondItems,
-              searchQuery: 'Bond 1',
+              searchQueryList: ['1754'],
               filteredItems: [bondItems[0]],
             ),
           ],
@@ -123,16 +133,16 @@ void main() {
       seed:
           () => BondsListState.loaded(
             items: bondItems,
-            searchQuery: '',
+            searchQueryList: [],
             filteredItems: bondItems,
           ),
-      act: (cubit) => cubit.searchBonds('ISIN1'),
+      act: (cubit) => cubit.searchBonds('Hella'),
       expect:
           () => [
             BondsListState.loaded(
               items: bondItems,
-              searchQuery: 'ISIN1',
-              filteredItems: [bondItems[0]],
+              searchQueryList: ['Hella'],
+              filteredItems: bondItems,
             ),
           ],
     );
@@ -145,7 +155,7 @@ void main() {
       seed:
           () => BondsListState.loaded(
             items: bondItems,
-            searchQuery: '',
+            searchQueryList: [],
             filteredItems: bondItems,
           ),
       act: (cubit) => cubit.searchBonds('Nonexistent Bond'),
@@ -153,7 +163,7 @@ void main() {
           () => [
             BondsListState.loaded(
               items: bondItems,
-              searchQuery: 'Nonexistent Bond',
+              searchQueryList: ['Nonexistent', 'Bond'],
               filteredItems: [],
             ),
           ],
