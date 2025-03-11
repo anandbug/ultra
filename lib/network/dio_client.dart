@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:ultra/utils/num_extensions.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class DioClient {
   final Dio _dio;

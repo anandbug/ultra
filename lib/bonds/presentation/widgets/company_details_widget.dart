@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ultra/bonds/data/models/company_details_model.dart';
 import 'package:ultra/bonds/presentation/widgets/image_loader_widget.dart';
 import 'package:ultra/utils/app_colors.dart';
@@ -35,8 +36,8 @@ class CompanyDetailsWidget extends StatelessWidget {
               ],
             ),
             child: CachedNetworkImage(
-              fadeInDuration: 200.milliseconds,
-              fadeOutDuration: 200.milliseconds,
+              fadeInDuration: 200.ms,
+              fadeOutDuration: 200.ms,
               imageUrl: data.logo,
               placeholder: (context, url) => ImageLoaderWidget(),
               errorWidget: (context, url, error) => Icon(Icons.error),

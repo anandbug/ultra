@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ultra/bonds/data/models/bond_item_model.dart';
 import 'package:ultra/bonds/presentation/widgets/image_loader_widget.dart';
@@ -20,13 +21,6 @@ class BondItemContent extends StatelessWidget {
     final titleSmall =
         item.isin.substring(0, item.isin.length - 4).toUpperCase();
     final titleBig = item.isin.substring(item.isin.length - 4).toUpperCase();
-    // final bgPaint =
-    //     Paint()
-    //       ..shader = LinearGradient(
-    //         colors: [AppColors.searchMatch, AppColors.searchMatch],
-    //         begin: Alignment.topLeft,
-    //         end: Alignment.bottomRight,
-    //       ).createShader(Rect.fromLTRB(0, 0, 0, 0));
 
     //searching in isin small
     if (search.isNotEmpty) {
@@ -234,8 +228,8 @@ class BondItemContent extends StatelessWidget {
               ),
               child: CachedNetworkImage(
                 imageUrl: item.logo,
-                fadeInDuration: 200.milliseconds,
-                fadeOutDuration: 200.milliseconds,
+                fadeInDuration: 200.ms,
+                fadeOutDuration: 200.ms,
                 placeholder:
                     (context, url) => ImageLoaderWidget(addPadding: false),
                 errorWidget: (context, url, error) => Icon(Icons.error),

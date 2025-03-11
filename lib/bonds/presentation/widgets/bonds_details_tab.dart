@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ultra/bonds/data/models/company_details_model.dart';
 import 'package:ultra/bonds/presentation/widgets/ananlysis_widget.dart';
 import 'package:ultra/bonds/presentation/widgets/pros_n_cons_widget.dart';
@@ -64,7 +65,20 @@ class _BondsDetailsTabState extends State<BondsDetailsTab>
       IndexedStack(
         index: _tabController.index,
         children: [
-          AnanlysisWidget(data: widget.data),
+          AnanlysisWidget(data: widget.data)
+              .animate()
+              .moveY(
+                begin: 4,
+                delay: 300.ms,
+                duration: 300.ms,
+                curve: Curves.easeIn,
+              )
+              .fade(
+                begin: 0,
+                delay: 400.ms,
+                duration: 300.ms,
+                curve: Curves.easeIn,
+              ),
           ProsNConsWidget(prosAndCons: widget.data.prosAndCons),
         ],
       ),
