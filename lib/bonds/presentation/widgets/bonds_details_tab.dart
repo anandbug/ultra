@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:ultra/bonds/data/models/company_details_model.dart';
 import 'package:ultra/bonds/presentation/widgets/ananlysis_widget.dart';
@@ -34,6 +35,7 @@ class _BondsDetailsTabState extends State<BondsDetailsTab>
 
   _handleTabSelection() {
     if (_tabController.indexIsChanging) {
+      HapticFeedback.mediumImpact();
       setState(() {});
     }
   }

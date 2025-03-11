@@ -40,7 +40,7 @@ class BondsListCubit extends Cubit<BondsListState> {
         BondsListState.loaded(
           items: currentState.items,
           searchQueryList: [],
-          filteredItems: currentState.filteredItems,
+          filteredItems: currentState.items,
         ),
       );
       return;

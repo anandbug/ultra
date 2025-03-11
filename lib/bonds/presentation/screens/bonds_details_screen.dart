@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,7 +23,12 @@ class BondsDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BackButtonWidget(onTap: () => context.pop()),
+            BackButtonWidget(
+              onTap: () {
+                HapticFeedback.heavyImpact();
+                context.pop();
+              },
+            ),
             12.sh,
             Flexible(
               child: BlocBuilder<BondDetailsCubit, BondsDetailsState>(

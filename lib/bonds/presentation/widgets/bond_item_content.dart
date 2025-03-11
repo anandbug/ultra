@@ -162,9 +162,6 @@ class BondItemContent extends StatelessWidget {
         for (int i = 0; i < matches.length; i++) {
           final strStart = i == 0 ? 0 : matches[i - 1].end;
           final match = matches[i];
-          // if (match.start > strStart) {
-          //   continue;
-          // }
           if (match.start > strStart) {
             nameSpans.add(
               TextSpan(
@@ -210,8 +207,8 @@ class BondItemContent extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.go("/bond-details");
         HapticFeedback.heavyImpact();
+        context.go("/bond-details");
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

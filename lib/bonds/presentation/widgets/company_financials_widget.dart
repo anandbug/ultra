@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/services.dart';
 import 'package:ultra/bonds/data/models/financials.dart';
 import 'package:ultra/bonds/presentation/widgets/bar_chart.dart';
 import 'package:ultra/utils/app_colors.dart';
@@ -35,6 +35,7 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget>
 
   _handleTabSelection() {
     if (_tabController.indexIsChanging) {
+      HapticFeedback.mediumImpact();
       setState(() {});
     }
   }
@@ -114,34 +115,8 @@ class _CompanyFinancialsWidgetState extends State<CompanyFinancialsWidget>
           IndexedStack(
             index: _tabController.index,
             children: [
-              BarChart(companyFinancials: widget.data)
-                  .animate()
-                  .moveY(
-                    begin: 4,
-                    delay: 500.ms,
-                    duration: 300.ms,
-                    curve: Curves.easeIn,
-                  )
-                  .fade(
-                    begin: 0,
-                    delay: 600.ms,
-                    duration: 300.ms,
-                    curve: Curves.easeIn,
-                  ),
-              BarChart(companyFinancials: widget.data, isRevenue: true)
-                  .animate()
-                  .moveY(
-                    begin: 4,
-                    delay: 500.ms,
-                    duration: 300.ms,
-                    curve: Curves.easeIn,
-                  )
-                  .fade(
-                    begin: 0,
-                    delay: 600.ms,
-                    duration: 300.ms,
-                    curve: Curves.easeIn,
-                  ),
+              BarChart(companyFinancials: widget.data),
+              BarChart(companyFinancials: widget.data, isRevenue: true),
             ],
           ),
         ],

@@ -24,7 +24,4 @@ class BondDetailsCubit extends Cubit<BondsDetailsState> {
       emit(BondsDetailsState.error(kDefaultErrorMsg));
     }
   }
-
-  @override
-  Future<void> close() => super.close();
 }
